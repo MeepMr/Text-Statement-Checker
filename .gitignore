@@ -1,0 +1,7 @@
+# Project exclude paths
+/cmake-build-debug/
+/test-candidates/
+/zzz_compiler-output/
+Text-Statement-Checker.sh
+CMakeLists.txt
+
