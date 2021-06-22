@@ -2,6 +2,7 @@
 /cmake-build-debug/
 /test-candidates/
 /zzz_compiler-output/
+/.idea/
 Text-Statement-Checker.sh
 CMakeLists.txt
 
