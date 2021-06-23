@@ -1,6 +1,7 @@
 #include <dirent.h>
 #include <string>
 #include <utility>
+#ifndef DirectoryManagement
 
 class DirectoryManagement {
 
@@ -13,3 +14,5 @@ public:
 private:
     std::string workingDirectory;
 };
+
+#endif
