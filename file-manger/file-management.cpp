@@ -2,7 +2,7 @@
 
 void FileManagement::printContentOfFile(const std::string& pathToFile) {
 
-    auto* linesOfFile = new std::string [MAXLINESOFFILE];
+    auto* linesOfFile = new std::string [500];
     FileManagement::printContentOfFile(FileManagement::getLinesOfFile(pathToFile, linesOfFile), linesOfFile);
 
     delete[] linesOfFile;
