@@ -8,6 +8,9 @@
 
 int main(int argc, char ** argv) {
 
+    if(argc != 2)
+        exit(100);
+
     std::string pathToTestDirectory = argv[1];
 
     auto* dirContents = new std::string [MAXSIZE];

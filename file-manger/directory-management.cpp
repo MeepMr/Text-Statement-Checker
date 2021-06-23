@@ -2,11 +2,6 @@
 
 DirectoryManagement::DirectoryManagement(std::string pathToDirectory): workingDirectory(std::move(pathToDirectory)) { }
 
-std::string DirectoryManagement::getWorkingDirectory() {
-
-    return workingDirectory;
-}
-
 int DirectoryManagement::getDirectoryContents(std::string directoryContentsList []) {
 
     DIR* directory = opendir(workingDirectory.c_str());
@@ -14,7 +9,6 @@ int DirectoryManagement::getDirectoryContents(std::string directoryContentsList 
     int directoryCounter = 0;
     if(!directory) {
 
-        //TODO throw exception
         printf("Directory not found!");
         directoryContentsList = nullptr;
     } else {

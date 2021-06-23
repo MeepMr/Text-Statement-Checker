@@ -23,9 +23,8 @@ public:
 
     explicit ConstraintManager(std::string registeredFile);
     ~ConstraintManager();
-    void addConstraint(const std::string& name, std::string constraintArray [], int amoutOfConstraints);
+    void addConstraint(const std::string& name, std::string constraintArray [], int amountOfConstraints);
     void printKeyWordMap();
-    std::string getRegisteredFile();
     void findKeyWordsInString(const std::string& lineOfFile, int currentLine);
     constraint * getRegisteredConstraints();
     void checkAllConstraints();

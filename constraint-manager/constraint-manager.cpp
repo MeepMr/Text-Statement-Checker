@@ -9,14 +9,14 @@ ConstraintManager::ConstraintManager(std::string registeredFile) {
     this->keyWordCounter = 0;
 }
 
-void ConstraintManager::addConstraint(const std::string& name, std::string constraintArray [], int amoutOfConstraints) {
+void ConstraintManager::addConstraint(const std::string& name, std::string constraintArray [], int amountOfConstraints) {
 
     registeredConstraints[constraintCounter].constraintArray = constraintArray;
     registeredConstraints[constraintCounter].identifier = name;
-    registeredConstraints[constraintCounter].amountOfConstraintParts = amoutOfConstraints;
+    registeredConstraints[constraintCounter].amountOfConstraintParts = amountOfConstraints;
     constraintCounter++;
 
-    for(int i = 0; i < amoutOfConstraints; i++)
+    for(int i = 0; i < amountOfConstraints; i++)
         addToKeyWordMap(constraintArray[i]);
 
 }
@@ -58,11 +58,6 @@ void ConstraintManager::printKeyWordMap() {
 
         std::cout << std::endl << std::endl;
     }
-}
-
-std::string ConstraintManager::getRegisteredFile() {
-
-    return std::string(fileName);
 }
 
 void ConstraintManager::findKeyWordsInString(const std::string& lineOfFile, int currentLine) {
