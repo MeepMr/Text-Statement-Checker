@@ -4,12 +4,13 @@
 
 
 #define MAXSIZE 300
+#define MAXSUBDIRSIZE 5
 
-int main() {
+int main(int argc, char ** argv) {
 
-    std::string pathToTestDirectory = "./test-candidates";
+    std::string pathToTestDirectory = argv[1];
 
-    std::string dirContents [MAXSIZE];
+    auto* dirContents = new std::string [MAXSIZE];
 
     int contentsCount = DirectoryManagement::getDirectoryContentsFromPath(pathToTestDirectory, dirContents);
 
@@ -18,7 +19,7 @@ int main() {
 
         std::cout << dirContents[i] << std::endl;
 
-        std::string subDirContents [MAXSIZE];
+        auto* subDirContents = new std::string [MAXSUBDIRSIZE];
 
         std::string pathToSubDirectory = pathToTestDirectory + "/" + dirContents[i];
         int subDirContentsCount = DirectoryManagement::getDirectoryContentsFromPath(pathToSubDirectory, subDirContents);
@@ -31,7 +32,11 @@ int main() {
 
             FileManagement::printContentOfFile(pathToFile);
         }
+
+        delete[] subDirContents;
     }
+
+    delete[] dirContents;
 
     return 0;
 }

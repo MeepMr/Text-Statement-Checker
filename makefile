@@ -1,5 +1,5 @@
 run: Text-Statement-Checker.sh
-	./Text-Statement-Checker.sh
+	./Text-Statement-Checker.sh ./test-candidates
 
 Text-Statement-Checker.sh: main.cpp ./zzz_compiler-output/file-management.o ./zzz_compiler-output/directory-management.o
 	g++ -o Text-Statement-Checker.sh main.cpp ./zzz_compiler-output/file-management.o ./zzz_compiler-output/directory-management.o
