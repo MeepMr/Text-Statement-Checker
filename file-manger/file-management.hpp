@@ -1,8 +1,9 @@
+#ifndef FileManagementClass
+#define FileManagementClass
+#pragma GCC diagnostic ignored "-Wc++11-extensions"
 #include <string>
 #include <fstream>
 #include <iostream>
-#ifndef FileManagement
-#pragma GCC diagnostic ignored "-Wc++11-extensions"
 
 class FileManagement {
 public:

@@ -1,7 +1,8 @@
+#ifndef ConstraintManagerClass
+#define ConstraintManagerClass
 #include <string>
 #include <utility>
 #include <iostream>
-#ifndef ConstraintManager
 
 class ConstraintManager {
 
@@ -28,7 +29,7 @@ public:
     void findKeyWordsInString(const std::string& lineOfFile, int currentLine);
     constraint * getRegisteredConstraints();
     void checkAllConstraints();
-    [[nodiscard]] int getAmountOfRegisteredConstraints() const;
+    int getAmountOfRegisteredConstraints() const;
 
 private:
     std::string fileName;

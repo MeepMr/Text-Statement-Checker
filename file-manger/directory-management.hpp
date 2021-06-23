@@ -1,8 +1,9 @@
+#ifndef DirectoryManagementClass
+#define DirectoryManagementClass
+#pragma GCC diagnostic ignored "-Wc++11-extensions"
 #include <dirent.h>
 #include <string>
 #include <utility>
-#ifndef DirectoryManagement
-#pragma GCC diagnostic ignored "-Wc++11-extensions"
 
 class DirectoryManagement {
 
