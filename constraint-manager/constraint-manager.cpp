@@ -9,6 +9,12 @@ ConstraintManager::ConstraintManager(std::string registeredFile) {
     this->keyWordCounter = 0;
 }
 
+ConstraintManager::~ConstraintManager() {
+
+    delete[] keyWordMap;
+    delete[] registeredConstraints;
+}
+
 void ConstraintManager::addConstraint(const std::string& name, std::string constraintArray [], int amountOfConstraints) {
 
     registeredConstraints[constraintCounter].constraintArray = constraintArray;
@@ -19,31 +25,6 @@ void ConstraintManager::addConstraint(const std::string& name, std::string const
     for(int i = 0; i < amountOfConstraints; i++)
         addToKeyWordMap(constraintArray[i]);
 
-}
-
-ConstraintManager::~ConstraintManager() {
-
-    delete[] keyWordMap;
-    delete[] registeredConstraints;
-}
-
-void ConstraintManager::addToKeyWordMap(const std::string& newKeyWord) {
-
-    if(!keyWordMapContains(newKeyWord)) {
-
-        keyWordMap[keyWordCounter++].keyWord = newKeyWord;
-    }
-}
-
-bool ConstraintManager::keyWordMapContains(const std::string& newKeyWord) {
-
-    for(int counter = 0; counter < keyWordCounter; counter++) {
-
-        if(keyWordMap[counter].keyWord == newKeyWord)
-            return true;
-    }
-
-    return false;
 }
 
 void ConstraintManager::printKeyWordMap() {
@@ -89,6 +70,29 @@ void ConstraintManager::checkAllConstraints() {
         else
             registeredConstraints[currentConstraintCounter].fulfilled = false;
     }
+}
+
+int ConstraintManager::getAmountOfRegisteredConstraints() const {
+    return constraintCounter;
+}
+
+void ConstraintManager::addToKeyWordMap(const std::string& newKeyWord) {
+
+    if(!keyWordMapContains(newKeyWord)) {
+
+        keyWordMap[keyWordCounter++].keyWord = newKeyWord;
+    }
+}
+
+bool ConstraintManager::keyWordMapContains(const std::string& newKeyWord) {
+
+    for(int counter = 0; counter < keyWordCounter; counter++) {
+
+        if(keyWordMap[counter].keyWord == newKeyWord)
+            return true;
+    }
+
+    return false;
 }
 
 bool ConstraintManager::checkConstraint(const ConstraintManager::constraint& currentConstraint) {
@@ -142,8 +146,4 @@ bool ConstraintManager::isKeyWordFoundAfterLine (const std::string& keyWord, int
     }
 
     return false;
-}
-
-int ConstraintManager::getAmountOfRegisteredConstraints() const {
-    return constraintCounter;
 }

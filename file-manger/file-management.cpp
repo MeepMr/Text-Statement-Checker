@@ -8,6 +8,14 @@ void FileManagement::printContentOfFile(const std::string& pathToFile) {
     delete[] linesOfFile;
 }
 
+void FileManagement::printContentOfFile(int linesCount, const std::string linesOfFile []) {
+
+    for(int counter = 0; counter < linesCount; counter++ ) {
+
+        std::cout << counter << ": " << linesOfFile[counter] << std::endl;
+    }
+}
+
 /**
  * Returns the lines read and the Lines in the passed String Array
  * @param pathToFile
@@ -30,13 +38,5 @@ int FileManagement::getLinesOfFile(const std::string& pathToFile, std::string li
     } else {
 
         return -1;
-    }
-}
-
-void FileManagement::printContentOfFile(int linesCount, const std::string linesOfFile []) {
-
-    for(int counter = 0; counter < linesCount; counter++ ) {
-
-        std::cout << counter << ": " << linesOfFile[counter] << std::endl;
     }
 }

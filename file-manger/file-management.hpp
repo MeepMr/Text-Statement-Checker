@@ -2,6 +2,8 @@
 #include <fstream>
 #include <iostream>
 #ifndef FileManagement
+#pragma GCC diagnostic ignored "-Wc++11-extensions"
+
 class FileManagement {
 public:
     static void printContentOfFile(const std::string&);

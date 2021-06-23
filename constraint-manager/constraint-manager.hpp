@@ -28,7 +28,7 @@ public:
     void findKeyWordsInString(const std::string& lineOfFile, int currentLine);
     constraint * getRegisteredConstraints();
     void checkAllConstraints();
-    int getAmountOfRegisteredConstraints() const;
+    [[nodiscard]] int getAmountOfRegisteredConstraints() const;
 
 private:
     std::string fileName;

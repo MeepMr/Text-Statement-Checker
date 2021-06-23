@@ -2,6 +2,7 @@
 #include "file-manger/file-management.hpp"
 #include "file-manger/directory-management.hpp"
 #include "constraint-manager/constraint-manager.hpp"
+#pragma GCC diagnostic ignored "-Wc++11-extensions"
 
 #define MAXSIZE 300
 #define MAXSUBDIRSIZE 5

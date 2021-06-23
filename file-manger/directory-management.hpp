@@ -2,6 +2,7 @@
 #include <string>
 #include <utility>
 #ifndef DirectoryManagement
+#pragma GCC diagnostic ignored "-Wc++11-extensions"
 
 class DirectoryManagement {
 
