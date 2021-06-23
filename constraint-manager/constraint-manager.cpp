@@ -15,6 +15,12 @@ ConstraintManager::~ConstraintManager() {
     delete[] registeredConstraints;
 }
 
+/**
+ *
+ * @param name Meaningful Name for the Constraint-Set
+ * @param constraintArray Array Providing the KeyWords in the Order, they have to appear in
+ * @param amountOfConstraints
+ */
 void ConstraintManager::addConstraint(const std::string& name, std::string constraintArray [], int amountOfConstraints) {
 
     registeredConstraints[constraintCounter].constraintArray = constraintArray;
@@ -27,6 +33,10 @@ void ConstraintManager::addConstraint(const std::string& name, std::string const
     }
 }
 
+/**
+ * Prints the Keyword Map with all found Keywords and their associated lines
+ * into std-out
+ */
 void ConstraintManager::printKeyWordMap() {
 
     for(int counter = 0; counter < keyWordCounter; counter++) {
@@ -38,6 +48,12 @@ void ConstraintManager::printKeyWordMap() {
     }
 }
 
+/**
+ * Searches the given String for all registered Keywords.
+ * When a Match is found, the given Line will be saved in the Keyword Struct
+ * @param lineOfFile
+ * @param currentLine Number of the Line in the file
+ */
 void ConstraintManager::findKeyWordsInString(const std::string& lineOfFile, int currentLine) {
 
     for(int counter = 0; counter < keyWordCounter; counter++) {
@@ -89,6 +105,12 @@ bool ConstraintManager::keyWordMapContains(const std::string& newKeyWord) {
     return false;
 }
 
+/**
+ * Checks for each Constraint part, if the corresponding Keyword was found and if the
+ * order of the Keywords matches the order defined at the declaration of the Keyword
+ * @param currentConstraint
+ * @return A Boolean, weather the Constraint succeeded or not
+ */
 bool ConstraintManager::checkConstraint(const ConstraintManager::constraint& currentConstraint) {
 
     int currentLine = 0;
@@ -96,7 +118,7 @@ bool ConstraintManager::checkConstraint(const ConstraintManager::constraint& cur
 
     for (int csCounter = 0; csCounter < currentConstraint.amountOfConstraintParts; csCounter++) {
 
-        found = isKeyWordFoundAfterLine(currentConstraint.constraintArray[csCounter], &currentLine);
+        found = isKeyWordFoundAfterLine(currentConstraint.constraintArray[csCounter], currentLine);
 
         if(!found)
             return false;
@@ -108,27 +130,42 @@ bool ConstraintManager::checkConstraint(const ConstraintManager::constraint& cur
         return false;
 }
 
-int ConstraintManager::getMinimumLine(int lines[], int amountLines, const int* currentLine) {
+/**
+ * Returns the smallest Number from an Integer Array, which is larger
+ * than or equal to the given currentLine
+ * @param lines
+ * @param amountLines
+ * @param currentLine
+ * @return
+ */
+int ConstraintManager::getMinimumLine(int lines[], int amountLines, int& currentLine) {
 
     for (int i = 0; i < amountLines; i++) {
 
-        if(lines[i] >= *currentLine)
+        if(lines[i] >= currentLine)
             return lines[i];
     }
 
     return -1;
 }
 
-bool ConstraintManager::isKeyWordFoundAfterLine (const std::string& keyWord, int* currentLine) {
+/**
+ * Checks if a given Keyword is found in the Keyword Objects.
+ * The Keyword has to be found after the currentLine
+ * @param keyWord
+ * @param currentLine
+ * @return
+ */
+bool ConstraintManager::isKeyWordFoundAfterLine (const std::string& keyWord, int& currentLine) {
 
     for (int kwCounter = 0; kwCounter < keyWordCounter; kwCounter++) {
 
-        keyWordCountMap * currentKwMap = &keyWordMap[kwCounter];
-        if ((*currentKwMap).keyWord == keyWord) {
+        keyWordCountMap  currentKwMap = keyWordMap[kwCounter];
+        if (currentKwMap.keyWord == keyWord) {
 
-            (*currentLine) = getMinimumLine((*currentKwMap).lineCount, (*currentKwMap).timesFound, currentLine);
+            currentLine = getMinimumLine(currentKwMap.lineCount, currentKwMap.timesFound, currentLine);
 
-            if(*currentLine < 0)
+            if(currentLine < 0)
                 return false;
             else
                 return true;

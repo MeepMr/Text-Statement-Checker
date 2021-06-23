@@ -41,8 +41,8 @@ private:
     void addToKeyWordMap(const std::string& newKeyWord);
     bool keyWordMapContains(const std::string& newKeyWord);
     bool checkConstraint(const ConstraintManager::constraint& currentConstraint);
-    static int getMinimumLine(int *lines,int amountLines, const int *currentLine);
-    bool isKeyWordFoundAfterLine(const std::string &keyWord, int *currentLine);
+    static int getMinimumLine(int *lines,int amountLines, int &currentLine);
+    bool isKeyWordFoundAfterLine(const std::string &keyWord, int &currentLine);
 };
 
 #endif

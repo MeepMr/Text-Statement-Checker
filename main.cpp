@@ -8,56 +8,98 @@
 #define MAXSIZE 300
 #define MAXSUBDIRSIZE 5
 
+void testSubdirectory (const std::string& parentDirectory, const std::string& currentDirectory);
+void testSingleFile (const std::string& parentDirectory, const std::string& currentFile);
+
+void injectConstraintsForTestFile (ConstraintManager* constraintManager, const std::string& filename);
+void registerKeyWords (ConstraintManager* constraintManager, std::string linesOfFile [], int linesCount);
+void executeTest(ConstraintManager* constraintManager);
+
+void printTestResults (ConstraintManager* constraintManager);
+
 int main(int argc, char ** argv) {
 
     if(argc != 2)
         exit(100);
 
+    auto* directoryContents = new std::string [MAXSIZE];
+    int contentsCount;
     std::string pathToTestDirectory = argv[1];
 
-    auto* dirContents = new std::string [MAXSIZE];
+    contentsCount = DirectoryManagement::getDirectoryContentsFromPath(pathToTestDirectory, directoryContents);
 
-    int contentsCount = DirectoryManagement::getDirectoryContentsFromPath(pathToTestDirectory, dirContents);
+    for(int i = 0; i < contentsCount; i++)
+        testSubdirectory(pathToTestDirectory, directoryContents[i]);
 
-    for(int i = 0; i < contentsCount; i++) {
+    delete[] directoryContents;
+    return 0;
+}
 
-        std::cout << dirContents[i] << std::endl;
+void testSubdirectory (const std::string& parentDirectory, const std::string& currentDirectory) {
 
-        auto* subDirContents = new std::string [MAXSUBDIRSIZE];
+    auto* subDirectoryContents = new std::string [MAXSUBDIRSIZE];
+    int subDirContentsCount, i;
 
-        std::string pathToSubDirectory = pathToTestDirectory + "/" + dirContents[i];
-        int subDirContentsCount = DirectoryManagement::getDirectoryContentsFromPath(pathToSubDirectory, subDirContents);
+    std::cout << currentDirectory << std::endl;
 
-        for(int j = 0; j < subDirContentsCount; j++) {
+    std::string pathToSubDirectory = parentDirectory + "/" + currentDirectory;
+    subDirContentsCount = DirectoryManagement::getDirectoryContentsFromPath(pathToSubDirectory, subDirectoryContents);
 
-            std::cout << "   " << subDirContents[j] << std::endl;
+    for(i = 0; i < subDirContentsCount; i++) {
 
-            auto* constraintManager = new ConstraintManager(argv[1]);
-            ConstraintInjector::injectTestConstraints(constraintManager);
-
-            std::string pathToFile = pathToSubDirectory + "/" + subDirContents[j];
-            auto* linesOfFile = new std::string[500];
-
-            const int lines = FileManagement::getLinesOfFile(pathToFile, linesOfFile);
-            for(int line = 0; line < lines; line++)
-                constraintManager->findKeyWordsInString(linesOfFile[line], line);
-
-            constraintManager->checkAllConstraints();
-
-            ConstraintManager::constraint *constraints = constraintManager->getRegisteredConstraints();
-
-            for(int bla = 0; bla < constraintManager->getAmountOfRegisteredConstraints(); bla++)
-                std::cout << constraints[bla].identifier << " Is " << constraints[bla].fulfilled << std::endl;
-
-            delete[] constraints;
-
-            delete [] linesOfFile;
-        }
-
-        delete[] subDirContents;
+        testSingleFile(pathToSubDirectory, subDirectoryContents[i]);
     }
 
-    delete[] dirContents;
+    delete[] subDirectoryContents;
+}
 
-    return 0;
+void testSingleFile (const std::string& parentDirectory, const std::string& currentFile) {
+
+    auto* constraintManager = new ConstraintManager(currentFile);
+    auto* linesOfFile = new std::string[500];
+    int lines;
+
+    std::cout << "   " << currentFile << std::endl;
+
+    std::string pathToFile = parentDirectory + "/" + currentFile;
+    injectConstraintsForTestFile(constraintManager, currentFile);
+
+    lines = FileManagement::getLinesOfFile(pathToFile, linesOfFile);
+
+    registerKeyWords(constraintManager, linesOfFile, lines);
+    executeTest(constraintManager);
+
+    delete [] linesOfFile;
+}
+
+void injectConstraintsForTestFile (ConstraintManager* constraintManager, const std::string& filename) {
+
+    if(filename == "Option1")
+        ConstraintInjector::injectTestConstraints(constraintManager);
+    else if (filename == "Option3")
+        ConstraintInjector::injectTestConstraints(constraintManager);
+    else
+        ConstraintInjector::injectTestConstraints(constraintManager);
+}
+
+void registerKeyWords (ConstraintManager* constraintManager, std::string linesOfFile [], int linesCount) {
+
+    for(int currentLine = 0; currentLine < linesCount; currentLine++)
+        constraintManager->findKeyWordsInString(linesOfFile[currentLine], currentLine);
+}
+
+void executeTest(ConstraintManager* constraintManager) {
+
+    constraintManager->checkAllConstraints();
+    printTestResults(constraintManager);
+}
+
+void printTestResults (ConstraintManager* constraintManager) {
+
+    ConstraintManager::constraint *constraints = constraintManager->getRegisteredConstraints();
+
+    for(int i = 0; i < constraintManager->getAmountOfRegisteredConstraints(); i++)
+        std::cout << constraints[i].identifier << " Is " << constraints[i].fulfilled << std::endl;
+
+    delete[] constraints;
 }

@@ -2,6 +2,12 @@
 
 DirectoryManagement::DirectoryManagement(std::string pathToDirectory): workingDirectory(std::move(pathToDirectory)) { }
 
+/**
+ * Writes all Contents of the workingDirectory from its associated DirectoryManager
+ * into the passed String Array.
+ * @param directoryContentsList
+ * @return The amount of Lines written into the passed String Array
+ */
 int DirectoryManagement::getDirectoryContents(std::string directoryContentsList []) {
 
     DIR* directory = opendir(workingDirectory.c_str());
@@ -28,6 +34,13 @@ int DirectoryManagement::getDirectoryContents(std::string directoryContentsList 
     return directoryCounter;
 }
 
+/**
+ * Enables all the functionality without the need to separately create an instance
+ * of the DirectoryManagement class
+ * @param pathToDirectory
+ * @param contentsReturnString
+ * @return
+ */
 int DirectoryManagement::getDirectoryContentsFromPath (const std::string& pathToDirectory, std::string contentsReturnString []) {
 
     auto* directoryFileManager = new DirectoryManagement(pathToDirectory);
