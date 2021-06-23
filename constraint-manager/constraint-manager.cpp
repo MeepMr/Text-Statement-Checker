@@ -22,18 +22,15 @@ void ConstraintManager::addConstraint(const std::string& name, std::string const
     registeredConstraints[constraintCounter].amountOfConstraintParts = amountOfConstraints;
     constraintCounter++;
 
-    for(int i = 0; i < amountOfConstraints; i++)
+    for(int i = 0; i < amountOfConstraints; i++) {
         addToKeyWordMap(constraintArray[i]);
-
+    }
 }
 
 void ConstraintManager::printKeyWordMap() {
 
     for(int counter = 0; counter < keyWordCounter; counter++) {
 
-        std::cout << "Found " << keyWordMap[counter].keyWord << " " << keyWordMap[counter].timesFound << " times" << std::endl;
-
-        std::cout << "Found at: ";
         for(int i = 0; i < keyWordMap[counter].timesFound; i++)
             std::cout << keyWordMap[counter].lineCount[i] << " ";
 
@@ -51,7 +48,6 @@ void ConstraintManager::findKeyWordsInString(const std::string& lineOfFile, int 
             keyWordMap[counter].lineCount[currentlyFoundTimes] = currentLine;
             keyWordMap[counter].timesFound++;
         }
-
     }
 }
 
@@ -78,10 +74,8 @@ int ConstraintManager::getAmountOfRegisteredConstraints() const {
 
 void ConstraintManager::addToKeyWordMap(const std::string& newKeyWord) {
 
-    if(!keyWordMapContains(newKeyWord)) {
-
+    if(!keyWordMapContains(newKeyWord))
         keyWordMap[keyWordCounter++].keyWord = newKeyWord;
-    }
 }
 
 bool ConstraintManager::keyWordMapContains(const std::string& newKeyWord) {
@@ -102,11 +96,7 @@ bool ConstraintManager::checkConstraint(const ConstraintManager::constraint& cur
 
     for (int csCounter = 0; csCounter < currentConstraint.amountOfConstraintParts; csCounter++) {
 
-        std::cout << "Before Line: " << currentConstraint.constraintArray[csCounter] << " " << currentLine << std::endl;
-
         found = isKeyWordFoundAfterLine(currentConstraint.constraintArray[csCounter], &currentLine);
-
-        std::cout << "After Line: " << currentConstraint.constraintArray[csCounter] << " " << currentLine << std::endl;
 
         if(!found)
             return false;

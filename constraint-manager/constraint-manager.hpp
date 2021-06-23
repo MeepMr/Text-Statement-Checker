@@ -10,7 +10,7 @@ class ConstraintManager {
 
         std::string keyWord;
         int timesFound;
-        int lineCount [];
+        int lineCount [100];
     } keyWordCountMap;
 
 public:
