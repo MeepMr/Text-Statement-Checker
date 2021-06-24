@@ -4,15 +4,24 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <utility>
 
 class FileManagement {
 public:
-    static void printContentOfFile(const std::string&);
-    static void printContentOfFile(int, const std::string []);
+    FileManagement(std::string  pathToFile, bool readOnly);
+    explicit FileManagement(std::string pathToFile);
+    ~FileManagement();
+    void printContentOfFile();
+    int getLinesOfFile(std::string []);
+    void writeLineToFile(const std::string& lineToWrite);
 
-    static int getLinesOfFile(const std::string&, std::string []);
 private:
+    std::string pathToFile;
+    bool readOnly;
+    std::ifstream* fileInput;
+    std::ofstream* fileOutput;
 
+    static void printContentOfFile(int, const std::string []);
 };
 
 #endif

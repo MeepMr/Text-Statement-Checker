@@ -1,11 +1,42 @@
 #include "file-management.hpp"
 
-void FileManagement::printContentOfFile(const std::string& pathToFile) {
+FileManagement::FileManagement(std::string pathToFile, bool readOnly): pathToFile(std::move(pathToFile)), readOnly(readOnly) {
 
-    auto* linesOfFile = new std::string [500];
-    FileManagement::printContentOfFile(FileManagement::getLinesOfFile(pathToFile, linesOfFile), linesOfFile);
+    if(readOnly) {
+        auto *fileInputStream = new std::ifstream(pathToFile);
+        fileInput = fileInputStream;
+        fileOutput = nullptr;
+    } else {
 
-    delete[] linesOfFile;
+        auto* fileOutputStream = new std::ofstream (pathToFile);
+        fileOutput = fileOutputStream;
+        fileInput = nullptr;
+    }
+}
+
+FileManagement::FileManagement(std::string pathToFile): pathToFile(std::move(pathToFile)), readOnly(true) {
+
+    auto* fileInputStream = new std::ifstream (pathToFile);
+    fileInput = fileInputStream;
+    fileOutput = nullptr;
+}
+
+FileManagement::~FileManagement() {
+
+    if(readOnly)
+        (*fileInput).close();
+    else
+        (*fileOutput).close();
+}
+
+void FileManagement::printContentOfFile() {
+
+    if (readOnly) {
+        auto *linesOfFile = new std::string[500];
+        FileManagement::printContentOfFile(FileManagement::getLinesOfFile(linesOfFile), linesOfFile);
+
+        delete[] linesOfFile;
+    }
 }
 
 void FileManagement::printContentOfFile(int linesCount, const std::string linesOfFile []) {
@@ -18,25 +49,28 @@ void FileManagement::printContentOfFile(int linesCount, const std::string linesO
 
 /**
  * Returns the lines read and the Lines in the passed String Array
- * @param pathToFile
  * @param linesOfFile
  * @returns Integer
  */
-int FileManagement::getLinesOfFile(const std::string& pathToFile, std::string linesOfFile []) {
+int FileManagement::getLinesOfFile(std::string linesOfFile []) {
 
-    std::ifstream fileInputStream(pathToFile);
-    int counter = 0;
-    if(fileInputStream.is_open()) {
+    if (readOnly && (*fileInput).is_open()) {
+        int counter = 0;
 
-        while (std::getline(fileInputStream, linesOfFile[counter])) {
+        while (std::getline((*fileInput), linesOfFile[counter]))
             counter++;
-        }
-
-        fileInputStream.close();
 
         return counter;
     } else {
 
         return -1;
+    }
+}
+
+void FileManagement::writeLineToFile(const std::string& lineToWrite) {
+
+    if(!readOnly) {
+
+        (*fileOutput) << lineToWrite << std::endl;
     }
 }
