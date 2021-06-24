@@ -1,5 +1,6 @@
 #ifndef ConstraintManagerClass
 #define ConstraintManagerClass
+#pragma GCC diagnostic ignored "-Wc++11-extensions"
 #include <string>
 #include <utility>
 #include <iostream>
@@ -19,8 +20,13 @@ public:
         std::string* constraintArray;
         std::string identifier;
         int amountOfConstraintParts;
+        int constraintsFulfilled;
         bool fulfilled;
+        bool fulfilledMap [20];
     } constraint;
+
+    int fulfilledConstraints;
+    int constraintCounter;
 
     explicit ConstraintManager(std::string registeredFile);
     ~ConstraintManager();
@@ -29,18 +35,16 @@ public:
     void findKeyWordsInString(const std::string& lineOfFile, int currentLine);
     constraint * getRegisteredConstraints();
     void checkAllConstraints();
-    int getAmountOfRegisteredConstraints() const;
 
 private:
     std::string fileName;
     constraint * registeredConstraints ;
     keyWordCountMap* keyWordMap;
-    int constraintCounter;
     int keyWordCounter;
 
     void addToKeyWordMap(const std::string& newKeyWord);
     bool keyWordMapContains(const std::string& newKeyWord);
-    bool checkConstraint(const ConstraintManager::constraint& currentConstraint);
+    bool checkConstraint(ConstraintManager::constraint& currentConstraint);
     static int getMinimumLine(int *lines,int amountLines, int &currentLine);
     bool isKeyWordFoundAfterLine(const std::string &keyWord, int &currentLine);
 };

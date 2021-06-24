@@ -6,6 +6,7 @@ ConstraintManager::ConstraintManager(std::string registeredFile) {
     this->registeredConstraints = new constraint [100];
     this->fileName = std::move(registeredFile);
     this->constraintCounter = 0;
+    this->fulfilledConstraints = 0;
     this->keyWordCounter = 0;
 }
 
@@ -77,15 +78,10 @@ void ConstraintManager::checkAllConstraints() {
 
         const bool success = checkConstraint(registeredConstraints[currentConstraintCounter]);
 
+        registeredConstraints[currentConstraintCounter].fulfilled = success;
         if(success)
-            registeredConstraints[currentConstraintCounter].fulfilled = true;
-        else
-            registeredConstraints[currentConstraintCounter].fulfilled = false;
+            fulfilledConstraints++;
     }
-}
-
-int ConstraintManager::getAmountOfRegisteredConstraints() const {
-    return constraintCounter;
 }
 
 void ConstraintManager::addToKeyWordMap(const std::string& newKeyWord) {
@@ -111,23 +107,22 @@ bool ConstraintManager::keyWordMapContains(const std::string& newKeyWord) {
  * @param currentConstraint
  * @return A Boolean, weather the Constraint succeeded or not
  */
-bool ConstraintManager::checkConstraint(const ConstraintManager::constraint& currentConstraint) {
+bool ConstraintManager::checkConstraint(ConstraintManager::constraint& currentConstraint) {
 
     int currentLine = 0;
-    bool found = false;
+    bool fulfilled = false;
 
     for (int csCounter = 0; csCounter < currentConstraint.amountOfConstraintParts; csCounter++) {
 
-        found = isKeyWordFoundAfterLine(currentConstraint.constraintArray[csCounter], currentLine);
+        fulfilled = isKeyWordFoundAfterLine(currentConstraint.constraintArray[csCounter], currentLine);
 
-        if(!found)
-            return false;
+        currentConstraint.fulfilledMap[csCounter] = fulfilled;
+
+        if(fulfilled)
+            currentConstraint.constraintsFulfilled++;
     }
 
-    if(found)
-        return true;
-    else
-        return false;
+    return fulfilled;
 }
 
 /**
