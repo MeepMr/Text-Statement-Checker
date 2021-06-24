@@ -16,21 +16,28 @@ void registerKeyWords (ConstraintManager* constraintManager, std::string linesOf
 void executeTest(ConstraintManager* constraintManager);
 
 void printTestResults (ConstraintManager* constraintManager);
+void writeStatementHead();
+
+FileManagement* resultStatement;
 
 int main(int argc, char ** argv) {
 
     if(argc != 2)
         exit(100);
 
-    auto* directoryContents = new std::string [MAXSIZE];
-    int contentsCount;
     std::string pathToTestDirectory = argv[1];
+    auto* directoryContents = new std::string [MAXSIZE];
+    resultStatement = new FileManagement(pathToTestDirectory+"/result-statement.md", false);
+    int contentsCount;
 
     contentsCount = DirectoryManagement::getDirectoryContentsFromPath(pathToTestDirectory, directoryContents);
+    //resultStatement->writeLineToFile("# Summary of Text-Tests");
+    writeStatementHead();
 
     for(int i = 0; i < contentsCount; i++)
         testSubdirectory(pathToTestDirectory, directoryContents[i]);
 
+    delete resultStatement;
     delete[] directoryContents;
     return 0;
 }
@@ -40,15 +47,17 @@ void testSubdirectory (const std::string& parentDirectory, const std::string& cu
     auto* subDirectoryContents = new std::string [MAXSUBDIRSIZE];
     int subDirContentsCount, i;
 
-    std::cout << currentDirectory << std::endl;
-
     std::string pathToSubDirectory = parentDirectory + "/" + currentDirectory;
     subDirContentsCount = DirectoryManagement::getDirectoryContentsFromPath(pathToSubDirectory, subDirectoryContents);
+
+    resultStatement->writeLineToFile("## " + currentDirectory);
 
     for(i = 0; i < subDirContentsCount; i++) {
 
         testSingleFile(pathToSubDirectory, subDirectoryContents[i]);
     }
+
+    resultStatement->writeLineToFile("+++");
 
     delete[] subDirectoryContents;
 }
@@ -59,12 +68,15 @@ void testSingleFile (const std::string& parentDirectory, const std::string& curr
     auto* linesOfFile = new std::string[500];
     int lines;
 
-    std::cout << "   " << currentFile << std::endl;
+    resultStatement->writeLineToFile("- " + currentFile);
+
 
     std::string pathToFile = parentDirectory + "/" + currentFile;
+    auto* testFile = new FileManagement(pathToFile);
+
     injectConstraintsForTestFile(constraintManager, currentFile);
 
-    lines = FileManagement::getLinesOfFile(pathToFile, linesOfFile);
+    lines = testFile->getLinesOfFile(linesOfFile);
 
     registerKeyWords(constraintManager, linesOfFile, lines);
     executeTest(constraintManager);
@@ -74,10 +86,12 @@ void testSingleFile (const std::string& parentDirectory, const std::string& curr
 
 void injectConstraintsForTestFile (ConstraintManager* constraintManager, const std::string& filename) {
 
-    if(filename == "Option1")
-        ConstraintInjector::injectTestConstraints(constraintManager);
-    else if (filename == "Option3")
-        ConstraintInjector::injectTestConstraints(constraintManager);
+    if(filename == "writer.c" || filename == "Writer.c")
+        ConstraintInjector::injectWriterConstraints(constraintManager);
+    else if (filename == "spooler.c" || filename == "Spooler.c")
+        ConstraintInjector::injectSpoolerConstraints(constraintManager);
+    else if (filename == "monitor.c" || filename == "Monitor.c")
+        ConstraintInjector::injectMonitorConstraints(constraintManager);
     else
         ConstraintInjector::injectTestConstraints(constraintManager);
 }
@@ -98,8 +112,33 @@ void printTestResults (ConstraintManager* constraintManager) {
 
     ConstraintManager::constraint *constraints = constraintManager->getRegisteredConstraints();
 
-    for(int i = 0; i < constraintManager->getAmountOfRegisteredConstraints(); i++)
-        std::cout << constraints[i].identifier << " Is " << constraints[i].fulfilled << std::endl;
+    char statusString [30];
+    int fulfilledConstraints = constraintManager->fulfilledConstraints;
+    int constraintAmount = constraintManager->constraintCounter;
+    sprintf(statusString, "\t- ==Passed %d of %d Tests==" ,  fulfilledConstraints, constraintAmount);
+
+    resultStatement->writeLineToFile(statusString);
+
+    for(int i = 0; i < constraintAmount; i++) {
+
+        std::string resultString;
+        if (constraints[i].fulfilled)
+            resultString = "\t- [x] " + constraints[i].identifier;
+        else
+            resultString = "\t- [ ] ==" + constraints[i].identifier + "==";
+
+        resultStatement->writeLineToFile(resultString);
+    }
 
     delete[] constraints;
+}
+
+void writeStatementHead () {
+
+    resultStatement->writeLineToFile("# Summary of Text-Tests\n"
+                                     "### Automated inspection of Source files.\n"
+                                     "\n---\n"
+                                     "The following File contains the results of an automated Test-Script.  \n"
+                                     "The Script looks for Predefined Keywords and checks the order in which they appear\n"
+                                     "+++");
 }
