@@ -44,5 +44,7 @@ int DirectoryManagement::getDirectoryContents(std::string directoryContentsList 
 int DirectoryManagement::getDirectoryContentsFromPath (const std::string& pathToDirectory, std::string contentsReturnString []) {
 
     auto* directoryFileManager = new DirectoryManagement(pathToDirectory);
-    return directoryFileManager->getDirectoryContents(contentsReturnString);
+    int directoryContentsCounter = directoryFileManager->getDirectoryContents(contentsReturnString);
+    delete directoryFileManager;
+    return directoryContentsCounter;
 }

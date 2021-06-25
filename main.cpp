@@ -88,6 +88,7 @@ void testSingleFile (const std::string& parentDirectory, const std::string& curr
     executeTest(constraintManager);
 
     delete [] linesOfFile;
+    delete testFile;
 }
 
 void injectConstraintsForTestFile (ConstraintManager* constraintManager, const std::string& filename) {
