@@ -27,6 +27,7 @@ public:
 
     int fulfilledConstraints;
     int constraintCounter;
+    std::string fileName;
 
     explicit ConstraintManager(std::string registeredFile);
     ~ConstraintManager();
@@ -37,7 +38,6 @@ public:
     void checkAllConstraints();
 
 private:
-    std::string fileName;
     constraint * registeredConstraints ;
     keyWordCountMap* keyWordMap;
     int keyWordCounter;

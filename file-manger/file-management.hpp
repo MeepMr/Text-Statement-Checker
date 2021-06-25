@@ -13,6 +13,7 @@ public:
     ~FileManagement();
     void printContentOfFile();
     int getLinesOfFile(std::string []);
+    std::string getNextLineOfFile();
     void writeLineToFile(const std::string& lineToWrite);
 
 private:
@@ -22,6 +23,7 @@ private:
     std::ofstream* fileOutput;
 
     static void printContentOfFile(int, const std::string []);
+
 };
 
 #endif

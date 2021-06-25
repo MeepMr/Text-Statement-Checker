@@ -74,3 +74,15 @@ void FileManagement::writeLineToFile(const std::string& lineToWrite) {
         (*fileOutput) << lineToWrite << std::endl;
     }
 }
+
+std::string FileManagement::getNextLineOfFile() {
+
+    std::string nextLine;
+
+    if(readOnly && (*fileInput).is_open())
+        std::getline((*fileInput), nextLine);
+    else
+        nextLine = "";
+
+    return nextLine;
+}

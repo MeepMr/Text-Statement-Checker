@@ -23,7 +23,7 @@ int DirectoryManagement::getDirectoryContents(std::string directoryContentsList 
 
             std::string fileName = currentDirectory->d_name;
 
-            if(fileName == ".DS_Store" || fileName == "." || fileName == ".." || fileName == "result-statement.md")
+            if(fileName == ".DS_Store" || fileName == "." || fileName == ".." || fileName == "result-statement.md" || fileName == "result-statement.md.tmp")
                 continue;
 
             directoryContentsList[directoryCounter] = fileName;

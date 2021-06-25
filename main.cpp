@@ -1,4 +1,3 @@
-#include <iostream>
 #include "file-manger/file-management.hpp"
 #include "file-manger/directory-management.hpp"
 #include "constraint-manager/constraint-manager.hpp"
@@ -16,9 +15,13 @@ void registerKeyWords (ConstraintManager* constraintManager, std::string linesOf
 void executeTest(ConstraintManager* constraintManager);
 
 void printTestResults (ConstraintManager* constraintManager);
+void printResultStatement (const std::string& pathToTestDirectory);
+void adjustTestStatistics (const std::string& fileName, int constraintAmount, int fulfilledConstraints);
 void writeStatementHead();
 
 FileManagement* resultStatement;
+int testsRun [4];
+int testCompleted [4];
 
 int main(int argc, char ** argv) {
 
@@ -27,18 +30,21 @@ int main(int argc, char ** argv) {
 
     std::string pathToTestDirectory = argv[1];
     auto* directoryContents = new std::string [MAXSIZE];
-    resultStatement = new FileManagement(pathToTestDirectory+"/result-statement.md", false);
+    resultStatement = new FileManagement(pathToTestDirectory+"/result-statement.md.tmp", false);
     int contentsCount;
 
     contentsCount = DirectoryManagement::getDirectoryContentsFromPath(pathToTestDirectory, directoryContents);
-    //resultStatement->writeLineToFile("# Summary of Text-Tests");
-    writeStatementHead();
 
     for(int i = 0; i < contentsCount; i++)
         testSubdirectory(pathToTestDirectory, directoryContents[i]);
 
     delete resultStatement;
     delete[] directoryContents;
+
+    printResultStatement(pathToTestDirectory);
+
+    delete resultStatement;
+
     return 0;
 }
 
@@ -112,12 +118,14 @@ void printTestResults (ConstraintManager* constraintManager) {
 
     ConstraintManager::constraint *constraints = constraintManager->getRegisteredConstraints();
 
-    char statusString [30];
     int fulfilledConstraints = constraintManager->fulfilledConstraints;
     int constraintAmount = constraintManager->constraintCounter;
-    sprintf(statusString, "\t- ==Passed %d of %d Tests==" ,  fulfilledConstraints, constraintAmount);
 
+    char statusString [30];
+    sprintf(statusString, "\t- **Passed %d of %d Tests**" ,  fulfilledConstraints, constraintAmount);
     resultStatement->writeLineToFile(statusString);
+
+    adjustTestStatistics(constraintManager->fileName, constraintAmount, fulfilledConstraints);
 
     for(int i = 0; i < constraintAmount; i++) {
 
@@ -133,12 +141,84 @@ void printTestResults (ConstraintManager* constraintManager) {
     delete[] constraints;
 }
 
+void adjustTestStatisticAtIdentifier (int identifier, int constraintAmount, int fulfilledConstraints) {
+
+    testsRun[identifier] += constraintAmount;
+    testCompleted[identifier] += fulfilledConstraints;
+}
+
+void adjustTestStatistics (const std::string& fileName, int constraintAmount, int fulfilledConstraints) {
+
+    int identifier = 0;
+    adjustTestStatisticAtIdentifier(identifier, constraintAmount, fulfilledConstraints);
+
+    if(fileName == "writer.c" || fileName == "Writer.c")
+        identifier = 1;
+    else if (fileName == "spooler.c" || fileName == "Spooler.c")
+        identifier = 2;
+    else if (fileName == "monitor.c" || fileName == "Monitor.c")
+        identifier = 3;
+
+    adjustTestStatisticAtIdentifier(identifier, constraintAmount, fulfilledConstraints);
+}
+
 void writeStatementHead () {
 
-    resultStatement->writeLineToFile("# Summary of Text-Tests\n"
-                                     "### Automated inspection of Source files.\n"
-                                     "\n---\n"
-                                     "The following File contains the results of an automated Test-Script.  \n"
-                                     "The Script looks for Predefined Keywords and checks the order in which they appear\n"
-                                     "+++");
+    char headString [1000];
+    sprintf(headString, "**Test Results**\n"
+                        "\n"
+                        "*Automatic Generated File*\n"
+                        "\n"
+                        "---\n"
+                        "\n"
+                        "**Automated inspection of Source files.**  \n"
+                        " \n"
+                        "The following File contains the results of an automated Test-Script.  \n"
+                        "The Script looks for Predefined Keywords and checks the order in which they appear\n"
+                        "\n"
+                        "---\n"
+                        "\n"
+                        "**Summary of The Tests**\n"
+                        "\n"
+                        "| Tested File | Tests Run | Tests Cleared | Clearing Rate |\n"
+                        "|:----------|:--------:|:-----------:|:-----------:|\n"
+                        "| All Files | %d | %d | %f %% |\n"
+                        "\n"
+                        "| writer.c | %d | %d | %f %% |\n"
+                        "\n"
+                        "| spooler.c | %d | %d | %f %% |\n"
+                        "\n"
+                        "| monitor.c | %d | %d | %f %% |\n"
+                        "\n"
+                        "+++\n"
+                        "**Checked Folders**\n"
+                        "\n"
+                        "{{TOC}}\n"
+                        "\n"
+                        "+++" , testsRun[0], testCompleted[0], (testCompleted[0] * 1.0)/testsRun[0]*100,
+                                testsRun[1], testCompleted[1], (testCompleted[1] * 1.0)/testsRun[1]*100,
+                                testsRun[2], testCompleted[2], (testCompleted[2] * 1.0)/testsRun[2]*100,
+                                testsRun[3], testCompleted[3], (testCompleted[3] * 1.0)/testsRun[3]*100);
+
+
+    resultStatement->writeLineToFile(headString);
+}
+
+void printResultStatement(const std::string& pathToTestDirectory) {
+
+    resultStatement = new FileManagement(pathToTestDirectory+"/result-statement.md", false);
+
+    auto* temporaryStatement = new FileManagement(pathToTestDirectory+"/result-statement.md.tmp");
+
+    writeStatementHead();
+
+    std::string currentLine = temporaryStatement->getNextLineOfFile();
+
+    while (!currentLine.empty()) {
+
+        resultStatement->writeLineToFile(currentLine);
+        currentLine = temporaryStatement->getNextLineOfFile();
+    }
+
+    delete temporaryStatement;
 }
