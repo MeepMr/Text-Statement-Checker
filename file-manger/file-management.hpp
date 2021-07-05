@@ -1,6 +1,7 @@
 #ifndef FileManagementClass
 #define FileManagementClass
-#pragma GCC diagnostic ignored "-Wc++11-extensions"
+
+#include "../constants.hpp"
 #include <string>
 #include <fstream>
 #include <iostream>

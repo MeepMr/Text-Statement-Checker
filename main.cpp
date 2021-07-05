@@ -1,11 +1,5 @@
-#include "file-manger/file-management.hpp"
-#include "file-manger/directory-management.hpp"
-#include "constraint-manager/constraint-manager.hpp"
-#include "constraint-manager/constraint-injector.hpp"
-#pragma GCC diagnostic ignored "-Wc++11-extensions"
+#include "main.hpp"
 
-#define MAXSIZE 300
-#define MAXSUBDIRSIZE 5
 
 void testSubdirectory (const std::string& parentDirectory, const std::string& currentDirectory);
 void testSingleFile (const std::string& parentDirectory, const std::string& currentFile);

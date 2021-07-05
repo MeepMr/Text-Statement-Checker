@@ -1,6 +1,6 @@
 #ifndef ConstraintManagerClass
 #define ConstraintManagerClass
-#pragma GCC diagnostic ignored "-Wc++11-extensions"
+#include "../constants.hpp"
 #include <string>
 #include <utility>
 #include <iostream>

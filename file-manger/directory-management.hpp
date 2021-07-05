@@ -1,6 +1,6 @@
 #ifndef DirectoryManagementClass
 #define DirectoryManagementClass
-#pragma GCC diagnostic ignored "-Wc++11-extensions"
+#include "../constants.hpp"
 #include <dirent.h>
 #include <string>
 #include <utility>

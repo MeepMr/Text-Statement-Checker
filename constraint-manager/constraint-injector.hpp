@@ -1,6 +1,6 @@
 #ifndef ConstraintInjectorClass
 #define ConstraintInjectorClass
-#pragma GCC diagnostic ignored "-Wc++11-extensions"
+#include "../constants.hpp"
 #include "constraint-manager.hpp"
 
 class ConstraintInjector {
