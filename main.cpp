@@ -50,6 +50,8 @@ void testSubdirectory (const std::string& parentDirectory, const std::string& cu
     std::string pathToSubDirectory = parentDirectory + "/" + currentDirectory;
     subDirContentsCount = DirectoryManagement::getDirectoryContentsFromPath(pathToSubDirectory, subDirectoryContents);
 
+    std::cout << "Currently Checking: " << currentDirectory << std::endl;
+
     resultStatement->writeLineToFile("## " + currentDirectory);
 
     for(i = 0; i < subDirContentsCount; i++) {
@@ -160,20 +162,20 @@ void adjustTestStatistics (const std::string& fileName, int constraintAmount, in
 void writeStatementHead () {
 
     char headString [1000];
-    sprintf(headString, "**Test Results**\n"
+    sprintf(headString, "# Test Results\n"
                         "\n"
-                        "*Automatic Generated File*\n"
+                        "**Automatic Generated File**\n"
                         "\n"
                         "---\n"
                         "\n"
-                        "**Automated inspection of Source files.**  \n"
+                        "## Automated inspection of Source files  \n"
                         " \n"
                         "The following File contains the results of an automated Test-Script.  \n"
                         "The Script looks for Predefined Keywords and checks the order in which they appear\n"
                         "\n"
                         "---\n"
                         "\n"
-                        "**Summary of The Tests**\n"
+                        "## Summary of The Tests"
                         "\n"
                         "| Tested File | Tests Run | Tests Cleared | Clearing Rate |\n"
                         "|:----------|:--------:|:-----------:|:-----------:|\n"
